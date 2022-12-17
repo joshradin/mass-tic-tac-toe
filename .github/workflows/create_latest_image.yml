@@ -1,0 +1,35 @@
+name: Publish Latest Docker Image
+concurrency: production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  push_to_registry:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      - name: Log in to docker hub
+        uses: docker/login-action
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Extract Metadata for Docker
+        id: meta
+        uses: docker/metadata-action
+        with:
+          images: |
+            jrad/tic-tac-toe
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action
+        with:
+          context: .
+          file: deployment/Dockerfile
+          push: true
