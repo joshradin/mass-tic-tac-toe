@@ -15,20 +15,20 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Log in to docker hub
-        uses: docker/login-action@v2.1
+        uses: docker/login-action@v2.1.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Extract Metadata for Docker
         id: meta
-        uses: docker/metadata-action@4.1.1
+        uses: docker/metadata-action@v4.1.1
         with:
           images: |
             jrad/tic-tac-toe
 
       - name: Build and push Docker image
-        uses: docker/build-push-action@3.2.0
+        uses: docker/build-push-action@v3.2.0
         with:
           context: .
           file: deployment/Dockerfile
