@@ -42,27 +42,4 @@ spec:
       targetPort: ttt-master-port
       protocol: TCP
   type: NodePort
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: ttt-master-ingress
-  annotations:
-    kubernetes.io/ingress.class: nginx
-spec:
-  defaultBackend:
-    service:
-      name: ttt-master
-      port:
-        number: 8032
-  rules:
-    - http:
-        paths:
-          - path: /
-            pathType: Prefix
-            backend:
-              service:
-                name: ttt-master
-                port:
-                  number: 8032
 

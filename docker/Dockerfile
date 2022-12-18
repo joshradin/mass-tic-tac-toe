@@ -7,3 +7,5 @@ RUN cargo install --path . --root /usr/local/install
 
 FROM ubuntu:latest
 COPY --from=builder /usr/local/install/bin /usr/local/bin
+
+RUN apt update -y && apt install -y libmbedtls12 && apt clean

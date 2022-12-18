@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ttt-client
-          image: jradin37/mass-tic-tac-toe
+          image: ghcr.io/jradin37/mass-tic-tac-toe
           imagePullPolicy: Always
           command:
             - client
