@@ -3,8 +3,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: ttt-master
-  labels:
-    name: ttt-master-deployment
 spec:
   replicas: 1
   selector:
@@ -43,16 +41,28 @@ spec:
     - port: 8032
       targetPort: ttt-master-port
       protocol: TCP
-  type: LoadBalancer
+  type: NodePort
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: ttt-master-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
 spec:
   defaultBackend:
     service:
       name: ttt-master
       port:
         number: 8032
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: ttt-master
+                port:
+                  number: 8032
 
