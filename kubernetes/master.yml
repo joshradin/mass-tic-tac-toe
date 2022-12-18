@@ -1,0 +1,37 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ttt-master-deployment
+  labels:
+    app: ttt-master
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ttt-master
+  template:
+    metadata:
+      labels:
+        app: ttt-master
+    spec:
+      containers:
+        - name: ttt-master
+          image: jradin37/tic-tac-toe
+          ports:
+            - name: ttt-master-port
+              containerPort: 8033
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ttt-master-service
+spec:
+  selector:
+    name: ttt-master
+  ports:
+    - port: 80
+      targetPort: ttt-master-port
+      protocol: TCP
+
+
