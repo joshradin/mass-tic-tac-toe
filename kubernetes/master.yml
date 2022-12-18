@@ -4,7 +4,7 @@ kind: Deployment
 metadata:
   name: ttt-master
   labels:
-    app: ttt-master
+    name: ttt-master-deployment
 spec:
   replicas: 1
   selector:
@@ -21,6 +21,9 @@ spec:
           imagePullPolicy: Always
           command:
             - master
+          env:
+            - name: RUST_LOG
+              value: debug
           ports:
             - name: ttt-coms-port
               containerPort: 8033
@@ -32,14 +35,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  labels:
-    app: ttt-master
   name: ttt-master
 spec:
   selector:
     app: ttt-master
   ports:
-    - port: 80
+    - port: 8032
       targetPort: ttt-master-port
       protocol: TCP
   type: LoadBalancer
@@ -47,7 +48,7 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: ttt-master
+  name: ttt-master-ingress
 spec:
   defaultBackend:
     service:

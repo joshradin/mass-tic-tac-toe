@@ -31,10 +31,7 @@ async fn main() -> std::io::Result<()> {
 
     let host = "localhost";
 
-    info!(
-        "starting server at {}:{} and {0}:{}",
-        host, COMMUNICATIONS_PORT, MASTER_PORT
-    );
+    info!("starting server at {}:{}", host, MASTER_PORT);
 
     let data = Data::new(AppState::default());
     let cloned = data.clone();
