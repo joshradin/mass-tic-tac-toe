@@ -6,7 +6,7 @@ metadata:
   labels:
     app: ttt-master
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
       app: ttt-master
@@ -17,10 +17,14 @@ spec:
     spec:
       containers:
         - name: ttt-master
-          image: jradin37/tic-tac-toe
+          image: jradin37/tic-tac-toe:main
+          command:
+            - master
           ports:
             - name: ttt-master-port
               containerPort: 8033
+      imagePullSecrets:
+        - name: dockerhub-credential
 ---
 apiVersion: v1
 kind: Service

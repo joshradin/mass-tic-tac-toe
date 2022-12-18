@@ -29,6 +29,12 @@ jobs:
         with:
           images: |
             jradin37/tic-tac-toe
+          tags: |
+            type=raw,value=latest,enable={{is_default_branch}},priority=1200
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=tag
+            type=ref,event=pr
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v3.2.0
