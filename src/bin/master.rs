@@ -39,26 +39,16 @@ async fn main() -> std::io::Result<()> {
     let data = Data::new(AppState::default());
     let cloned = data.clone();
 
-    let (comm, master) = tokio::join!(
-        HttpServer::new(move || {
-            App::new()
-                .app_data(cloned.clone())
-                .service(resource("/ws").route(get().to(echo)))
-                .wrap(middleware::Logger::default())
-        })
-        .bind((host.clone(), COMMUNICATIONS_PORT))?
-        .run(),
-        HttpServer::new(move || {
-            App::new()
-                .app_data(data.clone())
-                .service(connected_clients)
-                .service(resource("/ws").route(get().to(echo)))
-                .wrap(middleware::Logger::default())
-        })
-        .bind((host, MASTER_PORT))?
-        .run()
-    );
-    comm.and(master)
+    HttpServer::new(move || {
+        App::new()
+            .app_data(data.clone())
+            .service(connected_clients)
+            .service(resource("/ws").route(get().to(echo)))
+            .wrap(middleware::Logger::default())
+    })
+    .bind((host, MASTER_PORT))?
+    .run()
+    .await
 }
 
 async fn echo(req: HttpRequest, stream: web::Payload, data: Data<AppState>) -> impl Responder {

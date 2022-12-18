@@ -18,6 +18,7 @@ spec:
       containers:
         - name: ttt-client
           image: jradin37/tic-tac-toe
+          imagePullPolicy: Always
           command:
             - client
       imagePullSecrets:

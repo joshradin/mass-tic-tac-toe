@@ -18,6 +18,7 @@ spec:
       containers:
         - name: ttt-master
           image: jradin37/tic-tac-toe
+          imagePullPolicy: Always
           command:
             - master
           ports:

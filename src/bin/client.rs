@@ -44,7 +44,7 @@ async fn main() {
     });
 
     let host = "localhost";
-    let port = COMMUNICATIONS_PORT;
+    let port = 80;
 
     let addr = format!("ws://{}:{}/ws", host, port);
     info!("websocket uri: {addr:?}");
