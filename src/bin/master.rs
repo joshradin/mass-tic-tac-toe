@@ -31,20 +31,32 @@ async fn main() -> std::io::Result<()> {
 
     let host = env::var("SERVER_HOST").unwrap_or(String::from("localhost"));
 
-    info!("starting server at {}:{}", host, COMMUNICATIONS_PORT);
+    info!(
+        "starting server at {}:{} and {0}:{}",
+        host, COMMUNICATIONS_PORT, MASTER_PORT
+    );
 
     let data = Data::new(AppState::default());
 
-    HttpServer::new(move || {
-        App::new()
-            .app_data(data.clone())
-            .service(connected_clients)
-            .service(resource("/ws").route(get().to(echo)))
-            .wrap(middleware::Logger::default())
-    })
-    .bind((host, COMMUNICATIONS_PORT))?
-    .run()
-    .await
+    let (comm, master) = tokio::join!(
+        HttpServer::new(move || {
+            App::new()
+                .app_data(data.clone())
+                .service(resource("/ws").route(get().to(echo)))
+                .wrap(middleware::Logger::default())
+        })
+        .bind((host, COMMUNICATIONS_PORT))?
+        .run(),
+        HttpServer::new(move || {
+            App::new()
+                .app_data(data.clone())
+                .service(connected_clients)
+                .wrap(middleware::Logger::default())
+        })
+        .bind((host, MASTER_PORT))?
+        .run()
+    );
+    comm.and(master)
 }
 
 async fn echo(req: HttpRequest, stream: web::Payload, data: Data<AppState>) -> impl Responder {

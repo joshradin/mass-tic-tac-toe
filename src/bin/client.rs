@@ -6,7 +6,7 @@ use futures_util::{SinkExt as _, StreamExt as _};
 use log::{debug, error, info, warn};
 use mass_tic_tac_toe::constants::{COMMUNICATIONS_PORT, MASTER_PORT};
 use std::io::{stdout, Write};
-use std::{io, thread};
+use std::{env, io, thread};
 use tokio::select;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::UnboundedReceiverStream;
@@ -32,11 +32,13 @@ async fn main() {
         cmd_tx.send(cmd).unwrap();
     });
 
-    let (res, mut ws) = awc::Client::new()
-        .ws(format!("ws://localhost:{}/ws", COMMUNICATIONS_PORT))
-        .connect()
-        .await
-        .unwrap();
+    let host = env::var("TTT_MASTER_SERVICE_HOST").expect("no TTT master service host found");
+    let port = env::var("TTT_MASTER_SERVICE_PORT").expect("no TTT master service port found");
+
+    let addr = format!("ws://{}:{}/ws", host, port);
+    println!("websocket uri: {addr:?}");
+
+    let (res, mut ws) = awc::Client::new().ws(addr).connect().await.unwrap();
 
     debug!("response: {res:#?}");
     info!("connected; server will echo messages sent");

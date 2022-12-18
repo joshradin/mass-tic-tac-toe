@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: ttt-master-deployment
+  name: ttt-master
   labels:
     app: ttt-master
 spec:
@@ -17,25 +17,27 @@ spec:
     spec:
       containers:
         - name: ttt-master
-          image: jradin37/tic-tac-toe:main
+          image: jradin37/tic-tac-toe
           command:
             - master
           ports:
-            - name: ttt-master-port
+            - name: ttt-coms-port
               containerPort: 8033
+            - name: ttt-master-port
+              containerPort: 8032
       imagePullSecrets:
         - name: dockerhub-credential
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: ttt-master-service
+  name: ttt-master
 spec:
   selector:
     name: ttt-master
   ports:
-    - port: 80
-      targetPort: ttt-master-port
+    - port: 8033
+      targetPort: ttt-coms-port
       protocol: TCP
 
 

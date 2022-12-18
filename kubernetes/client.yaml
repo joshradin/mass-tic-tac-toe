@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ttt-client
+  labels:
+    app: ttt-client
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: ttt-client
+  template:
+    metadata:
+      labels:
+        app: ttt-client
+    spec:
+      containers:
+        - name: ttt-client
+          image: jradin37/tic-tac-toe
+          command:
+            - client
+      imagePullSecrets:
+        - name: dockerhub-credential
+
+
