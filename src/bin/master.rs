@@ -37,15 +37,16 @@ async fn main() -> std::io::Result<()> {
     );
 
     let data = Data::new(AppState::default());
+    let cloned = data.clone();
 
     let (comm, master) = tokio::join!(
         HttpServer::new(move || {
             App::new()
-                .app_data(data.clone())
+                .app_data(cloned.clone())
                 .service(resource("/ws").route(get().to(echo)))
                 .wrap(middleware::Logger::default())
         })
-        .bind((host, COMMUNICATIONS_PORT))?
+        .bind((host.clone(), COMMUNICATIONS_PORT))?
         .run(),
         HttpServer::new(move || {
             App::new()

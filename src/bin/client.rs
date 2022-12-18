@@ -36,7 +36,7 @@ async fn main() {
     let port = env::var("TTT_MASTER_SERVICE_PORT").expect("no TTT master service port found");
 
     let addr = format!("ws://{}:{}/ws", host, port);
-    println!("websocket uri: {addr:?}");
+    info!("websocket uri: {addr:?}");
 
     let (res, mut ws) = awc::Client::new().ws(addr).connect().await.unwrap();
 
