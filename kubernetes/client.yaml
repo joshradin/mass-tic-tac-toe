@@ -6,7 +6,7 @@ metadata:
   labels:
     app: ttt-client
 spec:
-  replicas: 5
+  replicas: 1
   selector:
     matchLabels:
       app: ttt-client

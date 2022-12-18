@@ -5,11 +5,17 @@ use awc::ws::Message::Pong;
 use futures_util::{SinkExt as _, StreamExt as _};
 use log::{debug, error, info, warn};
 use mass_tic_tac_toe::constants::{COMMUNICATIONS_PORT, MASTER_PORT};
+use rand::distributions::Alphanumeric;
+use rand::{thread_rng, Rng};
 use std::io::{stdout, Write};
+use std::thread::sleep;
+use std::time::Duration;
 use std::{env, io, thread};
 use tokio::select;
 use tokio::sync::mpsc;
 use tokio_stream::wrappers::UnboundedReceiverStream;
+
+const STR_LEN: usize = 12;
 
 #[actix_web::main]
 async fn main() {
@@ -20,16 +26,21 @@ async fn main() {
     let (cmd_tx, cmd_rx) = mpsc::unbounded_channel();
     let mut cmd_rx = UnboundedReceiverStream::new(cmd_rx);
 
-    let input_thread = thread::spawn(move || loop {
-        let mut cmd = String::with_capacity(12);
-        print!("echo >: ");
-        stdout().flush().unwrap();
-        if io::stdin().read_line(&mut cmd).is_err() {
-            error!("error reading line");
-            return;
-        }
+    let input_thread = thread::spawn(move || {
+        let chars = ('a'..='z')
+            .chain('A'..='Z')
+            .chain('0'..='9')
+            .collect::<Vec<_>>();
+        loop {
+            let string: String = thread_rng()
+                .sample_iter(Alphanumeric)
+                .take(STR_LEN)
+                .map(char::from)
+                .collect();
 
-        cmd_tx.send(cmd).unwrap();
+            cmd_tx.send(string).unwrap();
+            sleep(Duration::from_secs(3));
+        }
     });
 
     let host = env::var("TTT_MASTER_SERVICE_HOST").expect("no TTT master service host found");
