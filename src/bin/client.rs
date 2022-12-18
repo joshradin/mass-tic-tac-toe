@@ -43,8 +43,8 @@ async fn main() {
         }
     });
 
-    let host = env::var("TTT_MASTER_SERVICE_HOST").expect("no TTT master service host found");
-    let port = env::var("TTT_MASTER_SERVICE_PORT").expect("no TTT master service port found");
+    let host = "localhost";
+    let port = COMMUNICATIONS_PORT;
 
     let addr = format!("ws://{}:{}/ws", host, port);
     info!("websocket uri: {addr:?}");

@@ -29,7 +29,7 @@ async fn connected_clients(data: Data<AppState>) -> impl Responder {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    let host = env::var("SERVER_HOST").unwrap_or(String::from("localhost"));
+    let host = "localhost";
 
     info!(
         "starting server at {}:{} and {0}:{}",
@@ -52,6 +52,7 @@ async fn main() -> std::io::Result<()> {
             App::new()
                 .app_data(data.clone())
                 .service(connected_clients)
+                .service(resource("/ws").route(get().to(echo)))
                 .wrap(middleware::Logger::default())
         })
         .bind((host, MASTER_PORT))?

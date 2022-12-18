@@ -31,13 +31,26 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  labels:
+    app: ttt-master
   name: ttt-master
 spec:
   selector:
-    name: ttt-master
+    app: ttt-master
   ports:
-    - port: 8033
-      targetPort: ttt-coms-port
+    - port: 80
+      targetPort: ttt-master-port
       protocol: TCP
-
+  type: LoadBalancer
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ttt-master
+spec:
+  defaultBackend:
+    service:
+      name: ttt-master
+      port:
+        number: 8032
 
