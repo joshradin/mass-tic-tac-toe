@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: ttt-master
-          image: jradin37/mass-tic-tac-toe
+          image: ghcr.io/joshradin/mass-tic-tac-toe
           imagePullPolicy: Always
           command:
             - master
