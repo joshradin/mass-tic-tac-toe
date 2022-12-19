@@ -44,12 +44,16 @@ async fn main() {
     });
 
     let host = "127.0.0.1";
-    let port = MASTER_PORT;
+    let port = COMMUNICATIONS_PORT;
 
     let addr = format!("ws://{}:{}/ws", host, port);
     info!("websocket uri: {addr:?}");
 
-    let (res, mut ws) = awc::Client::new().ws(addr).connect().await.unwrap();
+    let (res, mut ws) = awc::Client::new()
+        .ws(addr)
+        .connect()
+        .await
+        .expect("could not create connection");
 
     debug!("response: {res:#?}");
     info!("connected; server will echo messages sent");

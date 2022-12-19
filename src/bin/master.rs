@@ -4,6 +4,7 @@ use std::time::{Duration, Instant};
 
 use actix::{Actor, ActorContext, AsyncContext, StreamHandler};
 use actix_web::dev::HttpServiceFactory;
+use actix_web::http::StatusCode;
 use actix_web::rt::System;
 use actix_web::web::{get, resource, Data, Json};
 use actix_web::{get, middleware, web, App, HttpRequest, HttpResponse, HttpServer, Responder};
@@ -17,12 +18,6 @@ use mass_tic_tac_toe::constants::{COMMUNICATIONS_PORT, MASTER_PORT};
 #[derive(Debug, Default)]
 pub struct AppState {
     connected_clients: Mutex<Vec<String>>,
-}
-
-#[get("/clients")]
-async fn connected_clients(data: Data<AppState>) -> impl Responder {
-    info!("app state: {data:#?}");
-    Json(data.connected_clients.lock().clone())
 }
 
 #[actix_web::main]
@@ -41,11 +36,23 @@ async fn main() -> std::io::Result<()> {
             .app_data(data.clone())
             .service(connected_clients)
             .service(resource("/ws").route(get().to(echo)))
+            .service(health)
             .wrap(middleware::Logger::default())
     })
     .bind((host, MASTER_PORT))?
     .run()
     .await
+}
+
+#[get("/health")]
+async fn health() -> impl Responder {
+    ("", StatusCode::OK)
+}
+
+#[get("/clients")]
+async fn connected_clients(data: Data<AppState>) -> impl Responder {
+    info!("app state: {data:#?}");
+    Json(data.connected_clients.lock().clone())
 }
 
 async fn echo(req: HttpRequest, stream: web::Payload, data: Data<AppState>) -> impl Responder {
