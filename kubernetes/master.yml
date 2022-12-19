@@ -26,7 +26,7 @@ spec:
             - name: RUST_LOG
               value: debug
           ports:
-            - containerPort: 8032
+            - containerPort: 80
 #          livenessProbe:
 #            httpGet:
 #              port: ttt-master-port
@@ -35,3 +35,17 @@ spec:
 #            periodSeconds: 30
       imagePullSecrets:
         - name: dockerhub-credential
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ttt-master
+  namespace: tic-tac-toe
+spec:
+  type: ClusterIP
+  selector:
+    app: ttt-master
+  ports:
+    - port: 80
+      protocol: TCP
+
