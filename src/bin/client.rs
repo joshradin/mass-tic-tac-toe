@@ -43,7 +43,7 @@ async fn main() {
         }
     });
 
-    let host = "localhost";
+    let host = "127.0.0.1";
     let port = MASTER_PORT;
 
     let addr = format!("ws://{}:{}/ws", host, port);
