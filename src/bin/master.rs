@@ -24,12 +24,7 @@ pub struct AppState {
 async fn main() -> std::io::Result<()> {
     env_logger::init_from_env(env_logger::Env::new().default_filter_or("info"));
 
-    let host = "127.0.0.1";
-
-    info!("starting server at {}:{}", host, MASTER_PORT);
-
     let data = Data::new(AppState::default());
-    let cloned = data.clone();
 
     HttpServer::new(move || {
         App::new()
@@ -37,14 +32,21 @@ async fn main() -> std::io::Result<()> {
             .service(connected_clients)
             .service(resource("/ws").route(get().to(echo)))
             .service(health)
+            .service(hello)
+            .default_service(web::to(|| HttpResponse::NotFound()))
             .wrap(middleware::Logger::default())
     })
-    .bind((host, MASTER_PORT))?
+    .bind(("localhost", MASTER_PORT))?
     .run()
     .await
 }
 
-#[get("/health")]
+#[get("/hello")]
+async fn hello() -> impl Responder {
+    "Hello, World!"
+}
+
+#[get("/healthx")]
 async fn health() -> impl Responder {
     ("", StatusCode::OK)
 }

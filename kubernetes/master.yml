@@ -4,8 +4,10 @@ kind: Deployment
 metadata:
   name: ttt-master
   namespace: tic-tac-toe
+  labels:
+    app: ttt-master
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: ttt-master
@@ -24,42 +26,12 @@ spec:
             - name: RUST_LOG
               value: debug
           ports:
-            - name: ttt-master-port
-              containerPort: 8032
-          livenessProbe:
-            httpGet:
-              port: ttt-master-port
-              path: /health
-            initialDelaySeconds: 5
-            periodSeconds: 30
+            - containerPort: 8032
+#          livenessProbe:
+#            httpGet:
+#              port: ttt-master-port
+#              path: /health
+#            initialDelaySeconds: 5
+#            periodSeconds: 30
       imagePullSecrets:
         - name: dockerhub-credential
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: ttt-master-incoming
-  namespace: tic-tac-toe
-spec:
-  selector:
-    app: ttt-master
-  ports:
-    - port: 8032
-      targetPort: ttt-master-port
-      protocol: TCP
-  type: LoadBalancer
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: ttt-master-coms
-  namespace: tic-tac-toe
-spec:
-  selector:
-    app: ttt-master
-  ports:
-    - port: 8032
-      nodePort: 30033
-      protocol: TCP
-  type: NodePort
-

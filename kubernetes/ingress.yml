@@ -9,11 +9,12 @@ metadata:
 spec:
   defaultBackend:
     service:
-      name: ttt-master
+      name: ttt-master-incoming
       port:
-        number: 8032
+        name: ttt-ingress
   rules:
-    - http:
+    - host: tictactoe.info
+      http:
         paths:
           - path: /
             pathType: Prefix
@@ -21,4 +22,4 @@ spec:
               service:
                 name: ttt-master
                 port:
-                  number: 8032
+                  name: ttt-ingress
