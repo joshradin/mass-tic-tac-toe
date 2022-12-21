@@ -24,7 +24,7 @@ async fn main() -> std::io::Result<()> {
             .service(hello)
             .wrap(middleware::Logger::default())
     })
-    .bind(("localhost", MASTER_PORT))?
+    .bind(("0.0.0.0", MASTER_PORT))?
     .run()
     .await
 }
