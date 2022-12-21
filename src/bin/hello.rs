@@ -3,6 +3,7 @@ use std::net::{IpAddr, SocketAddr};
 use std::time::{Duration, Instant};
 
 use actix::{Actor, ActorContext, AsyncContext, StreamHandler};
+use actix_web::cookie::time::macros::time;
 use actix_web::dev::HttpServiceFactory;
 use actix_web::http::StatusCode;
 use actix_web::rt::System;
@@ -32,8 +33,9 @@ async fn main() -> std::io::Result<()> {
 #[get("/hello")]
 async fn hello() -> impl Responder {
     format!(
-        "Hello, World!\nVersion: {version}\nHostname: {host}\n",
+        "Hello, World!\nVersion: {version}\nHostname: {host}\ntimestamp: {time}\n",
         version = env!("CARGO_PKG_VERSION"),
         host = gethostname::gethostname().to_string_lossy(),
+        time = chrono::Utc::now()
     )
 }
