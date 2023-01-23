@@ -4,10 +4,10 @@ version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "hello"
+name = "client"
 
 [[bin]]
-name = "client"
+name = "server"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -27,3 +27,4 @@ parking_lot = "0.12.1"
 rand = "0.8.5"
 gethostname = "0.4.1"
 chrono = "0.4.23"
+actix-codec = "0.5.0"
