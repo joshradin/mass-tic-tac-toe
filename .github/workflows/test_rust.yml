@@ -1,0 +1,34 @@
+name: Test rust project
+on:
+  push
+
+
+jobs:
+  test_rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache dependencies
+        id: cache-cargo
+        uses: actions/cache@v3
+        env:
+          cache-name: cache-cargo-dependencies
+        with:
+          path: ~/.cargo
+          key: ${{runner.os}}-build-${{env.cache-name}}-${{hashFiles('**/Cargo.lock')}}
+
+      - name: Build project
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Build project
+        uses: actions-rs/cargo@v1.0.1
+        with:
+          command: build
+
+      - name: Test project
+        uses: actions-rs/cargo@v1.0.1
+        with:
+          command: test
+
