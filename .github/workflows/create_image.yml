@@ -1,5 +1,7 @@
 name: Publish Docker Image
 concurrency: production
+description: |
+  publishes the docker image
 
 on:
   push:
@@ -38,7 +40,8 @@ jobs:
             jradin37/mass-tic-tac-toe
             ghcr.io/${{ github.repository }}
           tags: |
-            type=raw,value=latest,enable={{is_default_branch}},priority=1200
+            type=raw,value=latest,enable=${{is_default_branch}},priority=1200
+            type=raw,value=dev-${{github.run_number}},enable=${{github.ref == 'refs/head/develop'}}.priority=1200
             type=schedule
             type=ref,event=branch
             type=ref,event=tag
