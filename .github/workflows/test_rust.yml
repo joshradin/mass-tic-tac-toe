@@ -15,7 +15,7 @@ jobs:
           cache-name: cache-cargo-dependencies
         with:
           path: ~/.cargo
-          key: ${{runner.os}}-build-${{env.cache-name}}-${{hashFiles('**/Cargo.lock')}}
+          key: ${{runner.os}}-build-${{env.cache-name}}-${{hashFiles('Cargo.lock')}}
 
       - name: Build project
         uses: actions-rs/toolchain@v1
