@@ -17,7 +17,7 @@ jobs:
           path: ~/.cargo
           key: ${{runner.os}}-build-${{env.cache-name}}-${{hashFiles('Cargo.lock')}}
 
-      - name: Build project
+      - name: Prepare toolchain
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
