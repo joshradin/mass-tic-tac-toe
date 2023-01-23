@@ -1,7 +1,5 @@
 name: Publish Docker Image
 concurrency: production
-description: |
-  publishes the docker image
 
 on:
   push:
